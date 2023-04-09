@@ -11,8 +11,13 @@ chrome.webRequest.onBeforeRequest.addListener(({ url }) => {
   const urlObj = new URL(url);
   const query = urlObj.searchParams.get('q');
 
-  // Check if searching for a bang
-  if (query && query.startsWith('!')) {
+  // Check if query has a bang anywhere in it
+  if (query && query.includes('!') && bangs.some((bang) => {
+    const bangStartIdx = query.indexOf(`!${bang.t}`);
+    const prevCharIdx = bangStartIdx - 1;
+    const nextCharIdx = bangStartIdx + bang.t.length + 1;
+    return bangStartIdx > -1 && (nextCharIdx === query.length || query[nextCharIdx] === ' ') && (prevCharIdx === -1 || query[prevCharIdx] === ' ');
+  })) {
     // Redirect to DuckDuckGo
     return {
       redirectUrl: `https://www.duckduckgo.com/?q=${encodeURIComponent(query)}`,
