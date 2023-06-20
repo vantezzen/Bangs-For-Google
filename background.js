@@ -1,8 +1,8 @@
 let bangs = [];
 
-// Get current list of Bangs from DuckDuckGo
+// Get current list of Bangs from local
 (async () => {
-  const res = await fetch("https://duckduckgo.com/bang.js");
+  const res = await fetch("./bangs.json");
   bangs = await res.json();
 })();
 
